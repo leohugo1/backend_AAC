@@ -1,27 +1,26 @@
-import fs from 'node:fs'
-import { prisma } from '../../prisma/prismaClient.js'
-import nodemailer from 'nodemailer'
-import * as dotenv from 'dotenv'
-dotenv.config()
+import { prisma } from "../../prisma/prismaClient.js";
+import nodemailer from "nodemailer";
+import * as dotenv from "dotenv";
+dotenv.config();
 class CreatePalestranteUseCase {
-    async execute({ nome, sobrenome, email, cpf, matricula,titulo }) {
+    async execute({ nome, sobrenome, email, cpf, matricula, titulo }) {
         const user = process.env.EMAIL_NODEMAILER;
         const pass = process.env.SENHA_NODEMAILER;
 
         const transport = nodemailer.createTransport({
-            host: 'smtp.gmail.com',
+            host: "smtp.gmail.com",
             port: 587,
             secure: false,
             auth: {
-              user: user,
-              pass: pass,
+                user: user,
+                pass: pass,
             },
-          });
+        });
 
         const cpfExiste = await prisma.tabela_palestrante.findFirst({
             where: {
-                CPF: cpf
-            }
+                CPF: cpf,
+            },
         });
 
         if (cpfExiste) {
@@ -35,24 +34,24 @@ class CreatePalestranteUseCase {
                 CPF: cpf,
                 Matricula: matricula,
                 TituloArtigo: titulo,
-                Artigo:`./src/Artigos/${titulo}.pdf`
-
-
-            }
+                Artigo: `./src/Artigos/${titulo}.pdf`,
+            },
         });
-        transport.sendMail({
-            from: user,
-            to: email,
-            subject: "I ENCONTRO ACADÊMICO DE TECNOLOGIA E COMPUTAÇÃO DA UERN",
-            html: `
+        transport
+            .sendMail({
+                from: user,
+                to: email,
+                subject: "I ENCONTRO ACADÊMICO DE TECNOLOGIA E COMPUTAÇÃO DA UERN",
+                html: `
             <h4>Olá, ${nome.toUpperCase()} ${sobrenome.toUpperCase()}</h4>
             <p>Seu cadastro no <i>I ENCONTRO ACADÊMICO DE TECNOLOGIA E COMPUTAÇÃO DA UERN (EATEC UERN)</i> com submissão do trabalho <i>${titulo}</i> foi <strong style="color: green;">efetuado com sucesso</strong>!</p>
             <p>Att,<br><i>Organização do I EATEC UERN</i>.</p>
             `,
-          }).catch(err => console.log(err));
+            })
+            .catch((err) => console.log(err));
 
         return 200;
     }
 }
 
-export { CreatePalestranteUseCase }
+export { CreatePalestranteUseCase };
