@@ -45,7 +45,7 @@ class CreateOuvinteUseCase{
             html: `
             <h4>Olá, ${nome.toUpperCase()} ${sobrenome.toUpperCase()}</h4>
             <p>Seu cadastro no <i>I ENCONTRO ACADÊMICO DE TECNOLOGIA E COMPUTAÇÃO DA UERN (EATEC UERN)</i> como ouvinte foi <strong style="color: green;">efetuado com sucesso</strong>!</p>
-            <p>Att,<br><i>Organização do Evento</i>.</p>
+            <p>Att,<br><i>Organização do I EATEC UERN</i>.</p>
             `,
           }).catch(err => console.log(err));
         return 200;
